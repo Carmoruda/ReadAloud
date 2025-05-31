@@ -1,3 +1,18 @@
+<!--
+
+title: ReadAloud
+emoji: 🎙️
+colorFrom: blue
+colorTo: blue
+sdk: gradio
+sdk_version: 5.31.0
+app_file: app.py
+pinned: false
+
+---
+
+-->
+
 <h1 align="center">
   ReadAloud
 </h1>
@@ -22,18 +37,4 @@
     <img alt="Repo size" src="https://img.shields.io/github/repo-size/carmoruda/ReadAloud?color=FF69B4&labelColor=202328&style=for-the-badge">
     <img alt="Github last commit (branch)" src="https://img.shields.io/github/last-commit/carmoruda/ReadAloud/main?color=C9CC3F&labelColor=202328&label=Last%20Update%3F&style=for-the-badge">
     <img alt="Github repo license" src="https://img.shields.io/github/license/carmoruda/ReadAloud?color=15121C&labelColor=202328&style=for-the-badge">
-</div>
-
-<div hidden>
-  __
-  title: ReadAloud
-  emoji: 🎙️
-  colorFrom: blue
-  colorTo: blue
-  sdk: gradio
-  sdk_version: 5.31.0
-  app_file: app.py
-  pinned: false
-
-  ---
 </div>
