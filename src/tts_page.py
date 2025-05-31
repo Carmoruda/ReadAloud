@@ -76,4 +76,3 @@ def create_page():
 
 def reload_page():
     return update_tts_components()
-    return update_tts_components()

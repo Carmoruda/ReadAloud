@@ -111,7 +111,6 @@ with gr.Blocks(title="ReadAloud") as demo:
             ],
         )
 
-if __name__ == "__main__":
-    lang_code = SELECTED_LANGUAGE.split("_")[1]
-    translator.set_language(lang_code)
-    demo.launch()
+lang_code = SELECTED_LANGUAGE.split("_")[1]
+translator.set_language(lang_code)
+demo.launch()
