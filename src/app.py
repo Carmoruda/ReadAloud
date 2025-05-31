@@ -1,6 +1,5 @@
 import gradio as gr
 
-import google_cloud_page
 import tts_page
 from utils.translator import translator
 
@@ -24,6 +23,7 @@ def reload_interface(language):
     select_value = translator.t(SELECTED_LANGUAGE).replace("[", "").replace("]", "")
 
     print(f"Setting dropdown value to: {select_value}, type: {type(select_value)}")
+    tts_updates = tts_page.reload_page()
 
     return (
         # Update the configuration text and language dropdown
@@ -39,6 +39,8 @@ def reload_interface(language):
         ),
         # Update the app description
         gr.update(value=translator.t("App_Description")),
+        # Update the TTS page components
+        *tts_updates,
     )
 
 
@@ -65,16 +67,20 @@ def change_language(language):
     print(f"Language changed to: {SELECTED_LANGUAGE} ({code})")
 
 
+# --- MAIN APPLICATION ---
+
 with gr.Blocks(title="ReadAloud") as demo:
     # Main content
     gr.Markdown("# ReadAloud")
-    app_description = gr.Markdown(translator.t("App_Description"))
-    with gr.Tabs() as tabs:
-        with gr.Tab("Google Cloud TTS", id="GoogleCloudTTS"):
-            google_page = google_cloud_page.create_page()
 
+    app_description = gr.Markdown(translator.t("App_Description"))
+
+    with gr.Tabs() as tabs:
         with gr.Tab("GTTS", id="GTTS"):
             other_page = tts_page.create_page()
+
+        # with gr.Tab("Google Cloud TTS", id="GoogleCloudTTS"):
+        #     google_page = google_cloud_page.create_page()
 
     with gr.Sidebar():
         gr.Markdown("# ReadAloud")
@@ -95,7 +101,14 @@ with gr.Blocks(title="ReadAloud") as demo:
         language.change(
             fn=reload_interface,
             inputs=language,
-            outputs=[configuration_text, language, app_description],
+            outputs=[
+                configuration_text,
+                language,
+                app_description,
+                tts_page.input_text_component,
+                tts_page.convert_btn_component,
+                tts_page.audio_output_component,
+            ],
         )
 
 if __name__ == "__main__":

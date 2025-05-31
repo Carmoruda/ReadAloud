@@ -28,5 +28,25 @@
         "en": "ReadAloud is a lightweight, cross-platform tool that converts text or PDF documents into speech. Users can input plain text or upload a PDF file, and the app will read it aloud using a text-to-speech engine of their choice. ReadAloud supports multiple TTS backends, including gTTS, Google Cloud Text-to-Speech, and more, offering flexibility in voice quality, language, and output format. Ideal for accessibility, multitasking, or simply listening instead of reading.",
         "es": "ReadAloud es una herramienta ligera y multiplataforma que convierte en voz documentos de texto o PDF. Los usuarios pueden introducir texto plano o cargar un archivo PDF, y la aplicación lo leerá en voz alta utilizando un motor de conversión de texto a voz de su elección. ReadAloud es compatible con varios backends TTS, como gTTS, Google Cloud Text-to-Speech, etc., y ofrece flexibilidad en cuanto a calidad de voz, idioma y formato de salida. Ideal para accesibilidad, multitarea o simplemente para escuchar en lugar de leer.",
         "fr": "ReadAloud est un outil léger et multiplateforme qui convertit du texte ou des documents PDF en voix. Les utilisateurs peuvent saisir du texte brut ou télécharger un fichier PDF, et l’application le lira à voix haute en utilisant le moteur de synthèse vocale de leur choix. ReadAloud prend en charge plusieurs systèmes TTS, notamment gTTS, Google Cloud Text-to-Speech, et d’autres, offrant une flexibilité au niveau de la qualité vocale, de la langue et du format de sortie. Idéal pour l’accessibilité, le multitâche ou simplement pour écouter au lieu de lire."
+    },
+    "TTS_Text_input": {
+        "en": "Text to convert to speech",
+        "es": "Texto a convertir en voz",
+        "fr": "Texte à convertir en voix"
+    },
+    "TTS_Text_input_placeholder": {
+        "en": "Enter text here...",
+        "es": "Introduce el texto aquí...",
+        "fr": "Entrez le texte ici..."
+    },
+    "TTS_Button": {
+        "en": "Convert to Speech",
+        "es": "Convertir a voz",
+        "fr": "Convertir en voix"
+    },
+    "Generated_Audio": {
+        "en": "Generated Audio",
+        "es": "Audio generado",
+        "fr": "Audio généré"
     }
 }
