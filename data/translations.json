@@ -48,5 +48,25 @@
         "en": "Generated Audio",
         "es": "Audio generado",
         "fr": "Audio généré"
+    },
+    "TTS_PDF_input": {
+        "en": "PDF file",
+        "es": "Archivo PDF",
+        "fr": "Fichier PDF"
+    },
+    "TTS_Plain_Text_input": {
+        "en": "Plain text",
+        "es": "Texto plano",
+        "fr": "Texte brut"
+    },
+    "TTS_input_type": {
+        "en": "Input type",
+        "es": "Tipo de entrada",
+        "fr": "Type d'entrée"
+    },
+    "TTS_PDF_input_placeholder": {
+        "en": "Select a PDF file...",
+        "es": "Selecciona un archivo PDF...",
+        "fr": "Sélectionnez un fichier PDF..."
     }
 }
