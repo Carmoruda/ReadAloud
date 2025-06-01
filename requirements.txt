@@ -1,2 +1,3 @@
 gTTS
 gradio
+PyPDF2
