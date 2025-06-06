@@ -110,6 +110,8 @@ with gr.Blocks(title="ReadAloud") as demo:
                 tts_page.audio_output_component,
                 tts_page.input_type_component,
                 tts_page.input_file_component,
+                tts_page.tts_description,
+                tts_page.language_component,
             ],
         )
 

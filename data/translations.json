@@ -68,5 +68,100 @@
         "en": "Select a PDF file...",
         "es": "Selecciona un archivo PDF...",
         "fr": "Sélectionnez un fichier PDF..."
+    },
+    "TTS_Description": {
+        "en": "gTTS (Google Text-to-Speech) is a free service from Google that converts text into speech using high-quality synthesis models.  It’s ideal for quick and simple speech generation without requiring authentication or additional configuration.",
+        "es": "TTS (Google Text-to-Speech) es un servicio gratuito de Google que permite convertir texto en voz utilizando modelos de síntesis de alta calidad. Es ideal para obtener una lectura rápida y sencilla sin necesidad de autenticación adicional ni configuración.",
+        "fr": "gTTS (Google Text-to-Speech) est un service gratuit proposé par Google permettant de convertir du texte en parole à l’aide de modèles de synthèse vocale de haute qualité. Il est idéal pour une lecture simple et rapide, sans besoin d’authentification ou de configuration."
+    },
+    "TTS_English_Australia": {
+        "en": "English (Australia)",
+        "es": "Inglés (Australia)",
+        "fr": "Anglais (Australie)"
+    },
+    "TTS_English_United_Kingdom": {
+        "en": "English (United Kingdom)",
+        "es": "Inglés (Reino Unido)",
+        "fr": "Anglais (Royaume-Uni)"
+    },
+    "TTS_English_United_States": {
+        "en": "English (United States)",
+        "es": "Inglés (Estados Unidos)",
+        "fr": "Anglais (États-Unis)"
+    },
+    "TTS_English_Canada": {
+        "en": "English (Canada)",
+        "es": "Inglés (Canadá)",
+        "fr": "Anglais (Canada)"
+    },
+    "TTS_English_India": {
+        "en": "English (India)",
+        "es": "Inglés (India)",
+        "fr": "Anglais (Inde)"
+    },
+    "TTS_English_Ireland": {
+        "en": "English (Ireland)",
+        "es": "Inglés (Irlanda)",
+        "fr": "Anglais (Irlande)"
+    },
+    "TTS_English_South_Africa": {
+        "en": "English (South Africa)",
+        "es": "Inglés (Sudáfrica)",
+        "fr": "Anglais (Afrique du Sud)"
+    },
+    "TTS_English_Nigeria": {
+        "en": "English (Nigeria)",
+        "es": "Inglés (Nigeria)",
+        "fr": "Anglais (Nigéria)"
+    },
+    "TTS_French_Canada": {
+        "en": "French (Canada)",
+        "es": "Francés (Canadá)",
+        "fr": "Français (Canada)"
+    },
+    "TTS_French_France": {
+        "en": "French (France)",
+        "es": "Francés (Francia)",
+        "fr": "Français (France)"
+    },
+    "TTS_Mandarin_China_Mainland": {
+        "en": "Mandarin (China Mainland)",
+        "es": "Mandarín (China continental)",
+        "fr": "Mandarin (Chine continentale)"
+    },
+    "TTS_Mandarin_Taiwan": {
+        "en": "Mandarin (Taiwan)",
+        "es": "Mandarín (Taiwán)",
+        "fr": "Mandarin (Taïwan)"
+    },
+    "TTS_Portuguese_Brazil": {
+        "en": "Portuguese (Brazil)",
+        "es": "Portugués (Brasil)",
+        "fr": "Portugais (Brésil)"
+    },
+    "TTS_Portuguese_Portugal": {
+        "en": "Portuguese (Portugal)",
+        "es": "Portugués (Portugal)",
+        "fr": "Portugais (Portugal)"
+    },
+    "TTS_Spanish_Mexico": {
+        "en": "Spanish (Mexico)",
+        "es": "Español (México)",
+        "fr": "Espagnol (Mexique)"
+    },
+    "TTS_Spanish_Spain": {
+        "en": "Spanish (Spain)",
+        "es": "Español (España)",
+        "fr": "Espagnol (Espagne)"
+    },
+    "TTS_Spanish_United_States": {
+        "en": "Spanish (United States)",
+        "es": "Español (Estados Unidos)",
+        "fr": "Espagnol (États-Unis)"
+    },
+    "TTS_Local_Accent": {
+        "en": "Local accent",
+        "es": "Acento local",
+        "fr": "Accent local"
     }
 }
