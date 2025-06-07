@@ -1,6 +1,7 @@
 import gradio as gr
 
 import tts_page
+from utils.file_manager import FileManager as file_manager
 from utils.translator import translator
 
 SELECTED_LANGUAGE = "Languages_EN"
@@ -117,4 +118,5 @@ with gr.Blocks(title="ReadAloud") as demo:
 
 lang_code = SELECTED_LANGUAGE.split("_")[1]
 translator.set_language(lang_code)
+file_manager.ensure_dir("output")
 demo.launch()

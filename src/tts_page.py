@@ -5,8 +5,10 @@ from utils.language_codes import (
     LANGUAGE_CODES_ALIASES_MAP,
     TOP_LEVEL_DOMAIN_ALIASES_MAP,
 )
-from utils.reader import reader
+from utils.reader import PDFReader as reader
 from utils.translator import translator
+
+SELECTED_ACCENT = "TTS_English_United_States"
 
 input_text_component = None
 convert_btn_component = None
@@ -17,8 +19,6 @@ tts_description = None
 language_component = None
 
 pdf_selected = True
-
-SELECTED_ACCENT = "TTS_English_United_States"
 
 
 def get_selected_language(accent):
@@ -51,8 +51,11 @@ def update_tts_components():
     Updates the labels and values of the TTS components when the language changes.
     Returns a list of gr.update() objects.
     """
+    # Initialize the list of updates
     updates = []
 
+    # If there is a component for raw input text, changes the
+    # label and placeholder to the translated values
     if input_text_component:
         updates.append(
             gr.update(
@@ -61,12 +64,18 @@ def update_tts_components():
             )
         )
 
+    # If there is a component for the convert button, changes the
+    # value to the translated button text
     if convert_btn_component:
         updates.append(gr.update(value=translator.t("TTS_Button")))
 
+    # If there is a component for audio output, changes the
+    # label to the translated audio label
     if audio_output_component:
         updates.append(gr.update(label=translator.t("Generated_Audio")))
 
+    # If there is a component for input type (PDF or text), changes the
+    # choices and label to the translated values
     if input_type_component:
         updates.append(
             gr.update(
@@ -79,6 +88,8 @@ def update_tts_components():
             )
         )
 
+    # If there is a component for input file (PDF), changes the
+    # label to the translated PDF input placeholder
     if input_file_component:
         updates.append(
             gr.update(
@@ -86,9 +97,13 @@ def update_tts_components():
             )
         )
 
+    # If there is a component for TTS description (it's text), changes the
+    # value to the translated description
     if tts_description:
         updates.append(gr.update(value=translator.t("TTS_Description")))
 
+    # If there is a component for the language and dialect selection,
+    # updates the choices and label to the translated values
     if language_component:
         updates.append(
             gr.update(
@@ -116,6 +131,8 @@ def update_tts_components():
             )
         )
 
+    # Return the list of updates to be
+    # applied to the TTS components
     return updates
 
 
@@ -132,20 +149,30 @@ def convert_to_audio(text, pdf):
     global SELECTED_ACCENT
     audio_file = None
 
+    # Get the selected language code and domain based on the selected accent
     code, domain = get_selected_language(SELECTED_ACCENT)
 
     if pdf_selected:
-        # Generate audio from PDF
-        reader.read_pdf(pdf)
-        tts = gTTS(text=reader.content, lang=code, tld=domain)
+        # --- Generate audio from PDF ---
+        # 1. Read the PDF content
+        content = reader.read_pdf(pdf)
+        # 2. Use the content from the reader and the
+        # selected language code and domain
+        tts = gTTS(text=content, lang=code, tld=domain)
+        # 3. Save the audio file to the output directory
         audio_file = "output/output.mp3"
+        # 4. Save the audio file
         tts.save(audio_file)
     else:
-        # Generate audio from text
+        # --- Generate audio from text ---
+        # 1. Use the input text and the selected language code and domain
         tts = gTTS(text=text, lang=code, tld=domain)
+        # 2. Save the audio file to the output directory
         audio_file = "output/output.mp3"
+        # 3. Save the audio file
         tts.save(audio_file)
 
+    # Return the path to the generated audio file
     return audio_file
 
 
@@ -171,6 +198,11 @@ def update_visibility(radio):
 
 
 def create_page():
+    """Creates the TTS page with input components, buttons, and audio output.
+
+    Returns:
+        gr.Column: The TTS page layout with all components.
+    """
     global \
         input_text_component, \
         convert_btn_component, \
@@ -180,16 +212,25 @@ def create_page():
         tts_description, \
         language_component
 
+    # Create the TTS page using the column layout
     with gr.Column() as tts_page:
+        # Set the description for the TTS page. It explains the functionality of the
+        # gtts module/library and how it can be used to convert text to speech.
         tts_description = gr.Markdown(translator.t("TTS_Description"))
 
+        # Row for the input type selection and language selection
         with gr.Row():
+            # Radio button for selecting the input type (PDF or plain text)
+            # The default value is set to "PDF" input
             input_type_component = gr.Radio(
                 [translator.t("TTS_PDF_input"), translator.t("TTS_Plain_Text_input")],
                 label=translator.t("TTS_input_type"),
                 value=translator.t("TTS_PDF_input"),
             )
 
+            # Dropdown that allows the user to select the language and dialect for TTS
+            # The choices are based on the available languages and dialects in the gtts library
+            # The default value is set to "English (United States)"
             language_component = gr.Dropdown(
                 choices=[
                     translator.t("TTS_English_Australia"),
@@ -215,11 +256,9 @@ def create_page():
                 interactive=True,
             )
 
-            language_component.change(
-                fn=change_accent,
-                inputs=language_component,
-            )
-
+        # Textbox where the user can input text to be converted to speech.
+        # This component is initially hidden and will be shown when the user selects
+        # the "Plain Text" input type.
         input_text_component = gr.Textbox(
             label=translator.t("TTS_Text_input"),
             placeholder=translator.t("TTS_Text_input_placeholder"),
@@ -227,6 +266,11 @@ def create_page():
             visible=False,
         )
 
+        # File component where the user can upload a PDF file to be converted to speech.
+        # This component is initially visible and will be hidden when the user selects
+        # the "Plain Text" input type.
+        # When the user selects the "PDF" input type, this component will be shown
+        # and the user can upload a PDF file to be converted to speech.
         input_file_component = gr.File(
             label=translator.t("TTS_PDF_input_placeholder"),
             file_types=[".pdf"],
@@ -234,28 +278,52 @@ def create_page():
             file_count="single",
         )
 
+        # Button that the user clicks to convert the input text or PDF to speech.
         convert_btn_component = gr.Button(
             value=translator.t("TTS_Button"), variant="primary"
         )
 
+        # Audio output component that will play the generated audio file.
+        # This component shows a download button for the generated audio file.
         audio_output_component = gr.Audio(
             label=translator.t("Generated_Audio"), show_download_button=True
         )
 
+        # Set the function to update the visibility of the input text and file components
+        # based on the selected input type (PDF or plain text).
+        # When the user selects "PDF", the input file component will be shown
+        # and the input text component will be hidden.
         input_type_component.change(
             fn=update_visibility,
             inputs=input_type_component,
             outputs=[input_text_component, input_file_component],
         )
 
+        # Set the function to convert the input text or PDF to audio when the user clicks
+        # the convert button. It takes the input text and file as inputs and outputs the
+        # generated audio file to the audio output component.
         convert_btn_component.click(
             fn=convert_to_audio,
             inputs=[input_text_component, input_file_component],
             outputs=audio_output_component,
         )
 
+        # Set the function to change the accent when the user selects a different accent and
+        # dialect from the dropdown.
+        language_component.change(
+            fn=change_accent,
+            inputs=language_component,
+        )
+
+    # Return the TTS page layout with all components
     return tts_page
 
 
 def reload_page():
+    """Reloads the TTS page components to reflect the current language settings.
+
+    Returns:
+        list: A list of gr.update() objects to update the TTS components.
+    """
+
     return update_tts_components()
