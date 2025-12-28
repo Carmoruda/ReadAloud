@@ -2,3 +2,4 @@ gTTS
 gradio
 PyPDF2
 pre-commit
+google-cloud-texttospeech
