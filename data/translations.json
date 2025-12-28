@@ -163,5 +163,15 @@
         "en": "Local accent",
         "es": "Acento local",
         "fr": "Accent local"
+    },
+    "Google_Cloud_TTS_Description": {
+        "en": "Google cloud Texttospeech_v1 is the official Python client library for accessing Google Cloud’s Text-to-Speech service. This service converts text into speech using advanced AI models, including natural-sounding neural voices. In this module, it is used to generate high-quality audio from input text, offering customization options such as language, voice gender, speaking rate, and more.",
+        "es": "Google cloud Texttospeech_v1 es la biblioteca oficial de Google Cloud en Python para acceder al servicio Text-to-Speech. Este servicio permite convertir texto en voz utilizando modelos de inteligencia artificial avanzados, incluyendo voces neuronales realistas y personalizables. En este módulo, se utiliza para generar audios de alta calidad a partir del texto ingresado, con opciones para elegir idioma, género de voz, velocidad, entre otros parámetros.",
+        "fr": "Google cloud Texttospeech_v1  est la bibliothèque officielle de Google Cloud en Python pour accéder au service Text-to-Speech. Ce service permet de convertir du texte en voix grâce à des modèles d’intelligence artificielle avancés, incluant des voix neuronales naturelles et personnalisables. Dans ce module, il est utilisé pour générer un audio de haute qualité à partir du texte saisi, avec des options comme la langue, le genre de la voix, la vitesse, etc."
+    },
+    "TTS_Robotic_input": {
+        "en": "Robotic Tone",
+        "es": "Tono robótico",
+        "fr": "Ton robotique"
     }
 }
