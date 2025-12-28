@@ -11,15 +11,21 @@ from utils.translator import translator
 
 SELECTED_ACCENT = "TTS_English_United_States"
 ROBOTIC_ACTIVE = False
+ROBOTIC_BITRATE = 16000
+ROBOTIC_ECO = False
+OUTPUT_FORMAT = "mp3"
 
 input_text_component = None
 convert_btn_component = None
 audio_output_component = None
 input_type_component = None
 input_file_component = None
-input_robotic_component = None
+output_robotic_component = None
+output_robotic_bitrate_component = None
+output_robotic_eco_component = None
 tts_description = None
 language_component = None
+output_format_component = None
 
 pdf_selected = True
 
@@ -49,11 +55,25 @@ def change_accent(language):
     print(f"Selected accent: {SELECTED_ACCENT}")
 
 
+def change_output_format(output_format):
+    """Change the format of the generated file.
+
+    Args:
+        output_format (str): The desired output format (e.g., "mp3", "wav", "ogg")
+    """
+    global OUTPUT_FORMAT
+    OUTPUT_FORMAT = output_format
+    print(f"Selected output format: {OUTPUT_FORMAT}")
+
+
 def update_tts_components():
     """
     Updates the labels and values of the TTS components when the language changes.
     Returns a list of gr.update() objects.
     """
+    global ROBOTIC_ACTIVE
+    global ROBOTIC_ECO
+
     # Initialize the list of updates
     updates = []
 
@@ -103,11 +123,31 @@ def update_tts_components():
     # If there is a component for robotic tone option, changes the
     # label and info to the translated values
     robotic_value = "On" if ROBOTIC_ACTIVE else "Off"
-    if input_robotic_component:
+    if output_robotic_component:
         updates.append(
             gr.update(
                 label=translator.t("TTS_Robotic_input"),
                 value=robotic_value,
+            )
+        )
+
+    # If there is a component for robotic tone eco option, changes the
+    # label to the translated value
+    eco_value = "On" if ROBOTIC_ECO else "Off"
+    if output_robotic_eco_component:
+        updates.append(
+            gr.update(
+                label=translator.t("TTS_Robotic_Eco"),
+                value=eco_value,
+            )
+        )
+
+    # If there is a component for robotic tone bitrate, changes the
+    # label to the translated value
+    if output_robotic_bitrate_component:
+        updates.append(
+            gr.update(
+                label=translator.t("TTS_Robotic_Bitrate"),
             )
         )
 
@@ -145,6 +185,21 @@ def update_tts_components():
             )
         )
 
+    # If there is a component for the output format selection,
+    # updates the choices and label to the translated values
+    if output_format_component:
+        updates.append(
+            gr.update(
+                choices=[
+                    "mp3",
+                    "wav",
+                    "ogg",
+                ],
+                label=translator.t("TTS_Output_Format"),
+                value=OUTPUT_FORMAT,
+            )
+        )
+
     # Return the list of updates to be
     # applied to the TTS components
     return updates
@@ -161,6 +216,11 @@ def convert_to_audio(text, pdf):
         str: The path to the generated audio file.
     """
     global SELECTED_ACCENT
+    global ROBOTIC_ACTIVE
+    global ROBOTIC_BITRATE
+    global ROBOTIC_ECO
+    global OUTPUT_FORMAT
+
     audio_file = None
 
     # Get the selected language code and domain based on the selected accent
@@ -179,29 +239,36 @@ def convert_to_audio(text, pdf):
         # 1. Use the input text and the selected language code and domain
         tts = gTTS(text=text, lang=code, tld=domain)
 
-    # Save the audio file to the output directory
-    audio_file = "output/output.mp3"
-    # Save the audio file
-    tts.save(audio_file)
+    # Always save the raw TTS output as MP3 (gTTS native format)
+    base_mp3 = "output/output.mp3"
+    tts.save(base_mp3)
 
-    print(ROBOTIC_ACTIVE)
+    print(f"Generated audio file: {base_mp3} (Language: {code}, Domain: {domain})")
 
-    if ROBOTIC_ACTIVE:
-        # 1.. Load the audio with Pydub
-        audio = AudioSegment.from_mp3(audio_file)
+    # Prepare final output path based on selected format
+    final_path = (
+        base_mp3 if OUTPUT_FORMAT == "mp3" else f"output/output.{OUTPUT_FORMAT}"
+    )
 
-        # --- ROBOTIC TONE EFFECTS ---
+    # Apply robotic effects and/or format conversion if needed
+    if ROBOTIC_ACTIVE or OUTPUT_FORMAT != "mp3":
+        audio = AudioSegment.from_mp3(base_mp3)
 
-        # Lower the sample rate (Lo-Fi effect)
-        audio = audio.set_frame_rate(16000)
+        if ROBOTIC_ACTIVE:
+            # --- ROBOTIC TONE EFFECTS ---
+            audio = audio.set_frame_rate(ROBOTIC_BITRATE)
+            audio = audio._spawn(
+                audio.raw_data, overrides={"frame_rate": int(audio.frame_rate * 1.2)}
+            ).set_frame_rate(audio.frame_rate)
 
-        # Increase the speed (raises the pitch slightly)
-        audio = audio._spawn(
-            audio.raw_data, overrides={"frame_rate": int(audio.frame_rate * 1.2)}
-        ).set_frame_rate(audio.frame_rate)
+            if ROBOTIC_ECO:
+                eco = audio - 10  # Reduce echo volume
+                audio = audio.overlay(eco, position=50)  # 50ms delay
 
-        # 2. Export the modified audio back to the same file
-        audio.export(audio_file, format="mp3")
+        audio.export(final_path, format=OUTPUT_FORMAT)
+
+    # Return the path to the generated audio file
+    audio_file = final_path
 
     # Return the path to the generated audio file
     return audio_file
@@ -243,8 +310,43 @@ def update_robotic_component(radio):
 
     if value == "On":
         ROBOTIC_ACTIVE = True
+        return [gr.Slider(visible=True), gr.Radio(visible=True)]
     else:
         ROBOTIC_ACTIVE = False
+        return [gr.Slider(visible=False), gr.Radio(visible=False)]
+
+
+def update_slider(bitrate):
+    """Update the robotic tone bitrate based on the selected value.
+
+    Args:
+        bitrate (gr.Slider): The slider component indicating the robotic tone bitrate.
+
+    Returns:
+        None
+    """
+    global ROBOTIC_BITRATE
+
+    ROBOTIC_BITRATE = bitrate
+
+
+def update_eco_component(radio):
+    """Update the robotic eco option based on the selected value.
+
+    Args:
+        radio (gr.Radio): The radio button component indicating the robotic eco option.
+
+    Returns:
+        None
+    """
+    global ROBOTIC_ECO
+
+    value = radio
+
+    if value == "On":
+        ROBOTIC_ECO = True
+    else:
+        ROBOTIC_ECO = False
 
 
 def create_page():
@@ -259,9 +361,12 @@ def create_page():
         audio_output_component, \
         input_type_component, \
         input_file_component, \
-        input_robotic_component, \
+        output_robotic_component, \
+        output_robotic_bitrate_component, \
+        output_robotic_eco_component, \
         tts_description, \
-        language_component
+        language_component, \
+        output_format_component
 
     # Create the TTS page using the column layout
     with gr.Column() as tts_page:
@@ -272,8 +377,8 @@ def create_page():
         # gtts module/library and how it can be used to convert text to speech.
         tts_description = gr.Markdown(translator.t("TTS_Description"))
 
-        # Row for the input type selection and language selection
-        with gr.Row():
+        # Group for the input type selection and language selection
+        with gr.Group():
             # Radio button for selecting the input type (PDF or plain text)
             # The default value is set to "PDF" input
             input_type_component = gr.Radio(
@@ -282,6 +387,29 @@ def create_page():
                 value=translator.t("TTS_PDF_input"),
             )
 
+            # Textbox where the user can input text to be converted to speech.
+            # This component is initially hidden and will be shown when the user selects
+            # the "Plain Text" input type.
+            input_text_component = gr.Textbox(
+                label=translator.t("TTS_Text_input"),
+                placeholder=translator.t("TTS_Text_input_placeholder"),
+                lines=5,
+                visible=False,
+            )
+
+            # File component where the user can upload a PDF file to be converted to speech.
+            # This component is initially visible and will be hidden when the user selects
+            # the "Plain Text" input type.
+            # When the user selects the "PDF" input type, this component will be shown
+            # and the user can upload a PDF file to be converted to speech.
+            input_file_component = gr.File(
+                label=translator.t("TTS_PDF_input_placeholder"),
+                file_types=[".pdf"],
+                visible=True,
+                file_count="single",
+            )
+
+        with gr.Row():
             # Dropdown that allows the user to select the language and dialect for TTS
             # The choices are based on the available languages and dialects in the gtts library
             # The default value is set to "English (United States)"
@@ -310,36 +438,49 @@ def create_page():
                 interactive=True,
             )
 
-        # Textbox where the user can input text to be converted to speech.
-        # This component is initially hidden and will be shown when the user selects
-        # the "Plain Text" input type.
-        input_text_component = gr.Textbox(
-            label=translator.t("TTS_Text_input"),
-            placeholder=translator.t("TTS_Text_input_placeholder"),
-            lines=5,
-            visible=False,
-        )
-
-        # File component where the user can upload a PDF file to be converted to speech.
-        # This component is initially visible and will be hidden when the user selects
-        # the "Plain Text" input type.
-        # When the user selects the "PDF" input type, this component will be shown
-        # and the user can upload a PDF file to be converted to speech.
-        input_file_component = gr.File(
-            label=translator.t("TTS_PDF_input_placeholder"),
-            file_types=[".pdf"],
-            visible=True,
-            file_count="single",
-        )
+            # Dropdown that allows the user to select the output audio format
+            # The choices are "mp3", "wav", and "ogg"
+            # The default value is set to "mp3"
+            output_format_component = gr.Dropdown(
+                choices=[
+                    "mp3",
+                    "wav",
+                    "ogg",
+                ],
+                label=translator.t("TTS_Output_Format"),
+                value=OUTPUT_FORMAT,
+                interactive=True,
+            )
 
         # Row for the robotic tone option
         with gr.Row():
             # Toggle for selecting robotic tone effect
             # The default value is set to "Off"
-            input_robotic_component = gr.Radio(
+            output_robotic_component = gr.Radio(
                 ["On", "Off"],
                 label=translator.t("TTS_Robotic_input"),
                 value="Off",
+            )
+
+            # Toggle for selecting robotic eco effect
+            # The default value is set to "Off" and
+            # is initially hidden
+            output_robotic_eco_component = gr.Radio(
+                ["On", "Off"],
+                label=translator.t("TTS_Robotic_Eco"),
+                value="Off",
+                visible=False,
+            )
+
+            # Slider for selecting the robotic tone bitrate
+            # The default value is set to 16000 Hz and is initially hidden
+            output_robotic_bitrate_component = gr.Slider(
+                minimum=8000,
+                maximum=48000,
+                step=100,
+                label=translator.t("TTS_Robotic_Bitrate"),
+                value=ROBOTIC_BITRATE,
+                visible=False,
             )
 
         # Button that the user clicks to convert the input text or PDF to speech.
@@ -363,8 +504,6 @@ def create_page():
             outputs=[input_text_component, input_file_component],
         )
 
-        # Set
-
         # Set the function to convert the input text or PDF to audio when the user clicks
         # the convert button. It takes the input text and file as inputs and outputs the
         # generated audio file to the audio output component.
@@ -381,10 +520,29 @@ def create_page():
             inputs=language_component,
         )
 
+        # Set the function to change the output format when the user selects a different format
+        # from the dropdown.
+        output_format_component.change(
+            fn=change_output_format,
+            inputs=output_format_component,
+        )
+
         # Set the function to update the robotic tone option when the user toggles it.
-        input_robotic_component.change(
+        output_robotic_component.change(
             fn=update_robotic_component,
-            inputs=input_robotic_component,
+            inputs=output_robotic_component,
+            outputs=[output_robotic_bitrate_component, output_robotic_eco_component],
+        )
+
+        output_robotic_eco_component.change(
+            fn=update_eco_component,
+            inputs=output_robotic_eco_component,
+        )
+
+        # Set the function to update the slider when the user moves it.
+        output_robotic_bitrate_component.change(
+            fn=update_slider,
+            inputs=output_robotic_bitrate_component,
         )
 
     # Return the TTS page layout with all components

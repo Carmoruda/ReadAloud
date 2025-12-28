@@ -173,5 +173,20 @@
         "en": "Robotic Tone",
         "es": "Tono robótico",
         "fr": "Ton robotique"
+    },
+    "TTS_Robotic_Bitrate": {
+        "en": "Tone Bitrate (kbps)",
+        "es": "Tasa de bits del tono (kbps)",
+        "fr": "Débit binaire du ton (kbps)"
+    },
+    "TTS_Robotic_Eco": {
+        "en": "Voice with Eco",
+        "es": "Voz con Eco",
+        "fr": "Voix avec écho"
+    },
+    "TTS_Output_Format": {
+        "en": "Output File Format",
+        "es": "Formato de salida",
+        "fr": "Format de sortie"
     }
 }
