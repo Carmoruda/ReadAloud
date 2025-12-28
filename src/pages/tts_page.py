@@ -91,20 +91,23 @@ def update_tts_components():
             )
         )
 
-    if input_robotic_component:
-        updates.append(
-            gr.update(
-                label=translator.t("TTS_Robotic_input"),
-                info=translator.t("TTS_Robotic_input_info"),
-            )
-        )
-
     # If there is a component for input file (PDF), changes the
     # label to the translated PDF input placeholder
     if input_file_component:
         updates.append(
             gr.update(
                 label=translator.t("TTS_PDF_input_placeholder"),
+            )
+        )
+
+    # If there is a component for robotic tone option, changes the
+    # label and info to the translated values
+    robotic_value = "On" if ROBOTIC_ACTIVE else "Off"
+    if input_robotic_component:
+        updates.append(
+            gr.update(
+                label=translator.t("TTS_Robotic_input"),
+                value=robotic_value,
             )
         )
 
@@ -240,10 +243,8 @@ def update_robotic_component(radio):
 
     if value == "On":
         ROBOTIC_ACTIVE = True
-        return gr.Radio(value="On")
     else:
         ROBOTIC_ACTIVE = False
-        return gr.Radio(value="Off")
 
 
 def create_page():
@@ -279,14 +280,6 @@ def create_page():
                 [translator.t("TTS_PDF_input"), translator.t("TTS_Plain_Text_input")],
                 label=translator.t("TTS_input_type"),
                 value=translator.t("TTS_PDF_input"),
-            )
-
-            # Toggle for selecting robotic tone effect
-            # The default value is set to "Off"
-            input_robotic_component = gr.Radio(
-                ["On", "Off"],
-                label=translator.t("TTS_Robotic_input"),
-                value="Off",
             )
 
             # Dropdown that allows the user to select the language and dialect for TTS
@@ -339,6 +332,16 @@ def create_page():
             file_count="single",
         )
 
+        # Row for the robotic tone option
+        with gr.Row():
+            # Toggle for selecting robotic tone effect
+            # The default value is set to "Off"
+            input_robotic_component = gr.Radio(
+                ["On", "Off"],
+                label=translator.t("TTS_Robotic_input"),
+                value="Off",
+            )
+
         # Button that the user clicks to convert the input text or PDF to speech.
         convert_btn_component = gr.Button(
             value=translator.t("TTS_Button"), variant="primary"
@@ -382,7 +385,6 @@ def create_page():
         input_robotic_component.change(
             fn=update_robotic_component,
             inputs=input_robotic_component,
-            outputs=input_robotic_component,
         )
 
     # Return the TTS page layout with all components

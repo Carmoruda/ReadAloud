@@ -28,7 +28,6 @@ def reload_interface(language):
     tts_updates = tts_page.reload_page()
 
     return (
-        # Update the configuration text and language dropdown
         gr.update(value=f"### {translator.t('Configuration')}"),
         gr.update(
             choices=[
