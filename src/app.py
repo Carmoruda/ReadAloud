@@ -1,6 +1,7 @@
 import gradio as gr
 
-import pages.google_cloud_page as google_cloud_page
+# import pages.google_cloud_page as google_cloud_page
+import pages.edge_tts_page as edge_tts_page
 import pages.tts_page as tts_page
 from utils.file_manager import FileManager as file_manager
 from utils.translator import translator
@@ -80,8 +81,11 @@ with gr.Blocks(title="ReadAloud") as demo:
         with gr.Tab("GTTS", id="GTTS"):
             other_page = tts_page.create_page()
 
-        with gr.Tab("Google Cloud TTS", id="GoogleCloudTTS"):
-            google_page = google_cloud_page.create_page()
+        with gr.Tab("Edge TTS", id="EdgeTTS"):
+            edge_page = edge_tts_page.create_page()
+
+        # with gr.Tab("Google Cloud TTS", id="GoogleCloudTTS"):
+        #     google_page = google_cloud_page.create_page()
 
     with gr.Sidebar():
         gr.Markdown("# ReadAloud")

@@ -1,15 +1,14 @@
+import edge_tts
 import gradio as gr
-from gtts import gTTS
 from pydub import AudioSegment
 
 from utils.language_codes import (
-    LANGUAGE_CODES_ALIASES_MAP,
-    TOP_LEVEL_DOMAIN_ALIASES_MAP,
+    TOP_LEVEL_DOMAIN_ALIASES_MAP_MALE_EDGE,
 )
 from utils.reader import PDFReader as reader
 from utils.translator import translator
 
-SELECTED_ACCENT = "TTS_English_United_States"
+SELECTED_ACCENT = "English (United States)"
 ROBOTIC_ACTIVE = False
 ROBOTIC_BITRATE = 12000
 ROBOTIC_ECO = False
@@ -38,15 +37,15 @@ def get_selected_language(accent):
         accent (str): The accent/language name (e.g., "Spanish (Spain)")
 
     Returns:
-        tuple: (language_code, domain)
+        voice_code (str): The corresponding language code for edge-tts.
     """
-    # Search for the language code
-    code = LANGUAGE_CODES_ALIASES_MAP.get(accent, "en")
+    voice_code = TOP_LEVEL_DOMAIN_ALIASES_MAP_MALE_EDGE.get(
+        accent, "English (United States)"
+    )
 
-    # Search for the domain
-    domain = TOP_LEVEL_DOMAIN_ALIASES_MAP.get(accent, "com")
+    print(f"Found voice: {voice_code}")
 
-    return code, domain
+    return voice_code
 
 
 def change_accent(language):
@@ -205,7 +204,7 @@ def update_tts_components():
     return updates
 
 
-def convert_to_audio(text, pdf):
+async def convert_to_audio(text, pdf):
     """
     Convert the input text to speech using GTTS (Google Text-to-Speech).
 
@@ -224,7 +223,7 @@ def convert_to_audio(text, pdf):
     audio_file = None
 
     # Get the selected language code and domain based on the selected accent
-    code, domain = get_selected_language(SELECTED_ACCENT)
+    voice_code = get_selected_language(SELECTED_ACCENT)
 
     if pdf_selected:
         # --- Generate audio from PDF ---
@@ -232,18 +231,17 @@ def convert_to_audio(text, pdf):
         content = reader.read_pdf(pdf)
         # 2. Use the content from the reader and the
         # selected language code and domain
-        tts = gTTS(text=content, lang=code, tld=domain)
-
+        tts = edge_tts.Communicate(text=content, voice=voice_code)
     else:
         # --- Generate audio from text ---
         # 1. Use the input text and the selected language code and domain
-        tts = gTTS(text=text, lang=code, tld=domain)
+        tts = edge_tts.Communicate(text=text, voice=voice_code)
 
     # Always save the raw TTS output as MP3 (gTTS native format)
     base_mp3 = "output/output.mp3"
-    tts.save(base_mp3)
+    await tts.save(base_mp3)
 
-    print(f"Generated audio file: {base_mp3} (Language: {code}, Domain: {domain})")
+    print(f"Generated audio file: {base_mp3} (Voice code: {voice_code})")
 
     # Prepare final output path based on selected format
     final_path = (
@@ -379,14 +377,14 @@ def create_page():
         language_component, \
         output_format_component
 
-    # Create the TTS page using the column layout
+    # Create the Edge TTS page using the column layout
     with gr.Column() as tts_page:
-        # Set the title for the TTS page
-        gr.Markdown("## Google Text-to-Speech (gTTS)")
+        # Set the title for the Edge TTS page
+        gr.Markdown("## Edge Text-to-Speech (Edge TTS)")
 
-        # Set the description for the TTS page. It explains the functionality of the
-        # gtts module/library and how it can be used to convert text to speech.
-        tts_description = gr.Markdown(translator.t("TTS_Description"))
+        # Set the description for the Edge TTS page. It explains the functionality of the
+        # edge-tts module/library and how it can be used to convert text to speech.
+        tts_description = gr.Markdown(translator.t("Edge_TTS_Description"))
 
         # Group for the input type selection and language selection
         with gr.Group():

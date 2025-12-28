@@ -71,7 +71,7 @@
     },
     "TTS_Description": {
         "en": "gTTS (Google Text-to-Speech) is a free service from Google that converts text into speech using high-quality synthesis models.  It’s ideal for quick and simple speech generation without requiring authentication or additional configuration.",
-        "es": "TTS (Google Text-to-Speech) es un servicio gratuito de Google que permite convertir texto en voz utilizando modelos de síntesis de alta calidad. Es ideal para obtener una lectura rápida y sencilla sin necesidad de autenticación adicional ni configuración.",
+        "es": "gTTS (Google Text-to-Speech) es un servicio gratuito de Google que permite convertir texto en voz utilizando modelos de síntesis de alta calidad. Es ideal para obtener una lectura rápida y sencilla sin necesidad de autenticación adicional ni configuración.",
         "fr": "gTTS (Google Text-to-Speech) est un service gratuit proposé par Google permettant de convertir du texte en parole à l’aide de modèles de synthèse vocale de haute qualité. Il est idéal pour une lecture simple et rapide, sans besoin d’authentification ou de configuration."
     },
     "TTS_English_Australia": {
@@ -188,5 +188,10 @@
         "en": "Output File Format",
         "es": "Formato de salida",
         "fr": "Format de sortie"
+    },
+    "Edge_TTS_Description": {
+        "en": "edge-tts (Microsoft Edge Text-to-Speech) is a free, high-performance library that provides access to Microsoft's neural voices without requiring an Azure subscription. It offers a wide variety of realistic male and female voices across multiple languages, making it perfect for developers seeking professional-grade audio with minimal setup.",
+        "es": "edge-tts (Microsoft Edge Text-to-Speech) es una librería gratuita de alto rendimiento que permite acceder a las voces neuronales de Microsoft sin necesidad de una suscripción a Azure. Ofrece una amplia variedad de voces realistas masculinas y femeninas en múltiples idiomas, siendo ideal para desarrolladores que buscan audio de calidad profesional con una configuración mínima.",
+        "fr": "edge-tts (Microsoft Edge Text-to-Speech) est une bibliothèque gratuite et performante qui permet d'accéder aux voix neuronales de Microsoft sans nécessiter d'abonnement Azure. Elle offre une grande variété de voix masculines et féminines réalistes dans plusieurs langues, ce qui la rend idéale pour les développeurs recherchant une qualité audio professionnelle avec une configuration minimale."
     }
 }
