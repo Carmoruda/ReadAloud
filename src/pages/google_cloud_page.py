@@ -142,7 +142,7 @@ def convert_to_audio(text, pdf, output_name):
         with open(f"output/{output_name_component}.wav", "wb") as out:
             out.write(audio_bytes)
 
-        print(f"✅ Audio generado y guardado en: 'output/{output_name_component}.wav'")
+        print(f"Audio generado y guardado en: 'output/{output_name_component}.wav'")
         return f"output/{output_name_component}.wav"
 
     else:
