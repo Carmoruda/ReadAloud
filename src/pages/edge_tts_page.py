@@ -25,6 +25,7 @@ output_robotic_eco_component = None
 tts_description = None
 language_component = None
 output_format_component = None
+output_file_name_component = None
 
 pdf_selected = True
 
@@ -184,6 +185,17 @@ def update_tts_components():
             )
         )
 
+    # If there is a component for the output file name,
+    # updates the label and placeholder to the translated values
+    if output_file_name_component:
+        updates.append(
+            gr.update(
+                label=translator.t("TTS_Output_File_Name"),
+                placeholder=translator.t("TTS_Output_File_Name_Placeholder"),
+                value="generated_audio",
+            )
+        )
+
     # If there is a component for the output format selection,
     # updates the choices and label to the translated values
     if output_format_component:
@@ -204,12 +216,14 @@ def update_tts_components():
     return updates
 
 
-async def convert_to_audio(text, pdf):
+async def convert_to_audio(text, pdf, output_name):
     """
     Convert the input text to speech using GTTS (Google Text-to-Speech).
 
     Args:
         text (str): The text to convert to speech.
+        pdf (str): The path to the input PDF file (if PDF input is selected).
+        output_name (str): The name for the output audio file.
 
     Returns:
         str: The path to the generated audio file.
@@ -238,14 +252,14 @@ async def convert_to_audio(text, pdf):
         tts = edge_tts.Communicate(text=text, voice=voice_code)
 
     # Always save the raw TTS output as MP3 (gTTS native format)
-    base_mp3 = "output/output.mp3"
+    base_mp3 = f"output/{output_name}.mp3"
     await tts.save(base_mp3)
 
     print(f"Generated audio file: {base_mp3} (Voice code: {voice_code})")
 
     # Prepare final output path based on selected format
     final_path = (
-        base_mp3 if OUTPUT_FORMAT == "mp3" else f"output/output.{OUTPUT_FORMAT}"
+        base_mp3 if OUTPUT_FORMAT == "mp3" else f"output/{output_name}.{OUTPUT_FORMAT}"
     )
 
     # Apply robotic effects and/or format conversion if needed
@@ -375,6 +389,7 @@ def create_page():
         output_robotic_eco_component, \
         tts_description, \
         language_component, \
+        output_file_name_component, \
         output_format_component
 
     # Create the Edge TTS page using the column layout
@@ -444,6 +459,15 @@ def create_page():
                 ],
                 label=translator.t("TTS_Local_Accent"),
                 value=translator.t("TTS_English_United_States"),
+                interactive=True,
+            )
+
+            # Textbox for specifying the output audio file name
+            # The default value is set to "generated_audio"
+            output_file_name_component = gr.Textbox(
+                label=translator.t("TTS_Output_File_Name"),
+                placeholder=translator.t("TTS_Output_File_Name_Placeholder"),
+                value="generated_audio",
                 interactive=True,
             )
 
@@ -518,7 +542,11 @@ def create_page():
         # generated audio file to the audio output component.
         convert_btn_component.click(
             fn=convert_to_audio,
-            inputs=[input_text_component, input_file_component],
+            inputs=[
+                input_text_component,
+                input_file_component,
+                output_file_name_component,
+            ],
             outputs=audio_output_component,
         )
 
