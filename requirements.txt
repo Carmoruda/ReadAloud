@@ -23,7 +23,7 @@ google-api-core==2.25.0
 google-auth==2.40.3
 google-cloud-texttospeech==2.27.0
 googleapis-common-protos==1.70.0
-gradio==5.32.0
+gradio==5.31.0
 gradio_client==1.10.2
 gradio_toggle==2.0.2
 groovy==0.1.2
